@@ -1,68 +1,89 @@
 import {
+    Box,
+    Button,
     Dialog,
+    Select,
+    TextField,
+    MenuItem,
+    IconButton,
+    InputLabel,
+    FormControl,
     DialogTitle,
     DialogContent,
     DialogActions,
-    TextField,
-    Button,
-    IconButton
 } from '@mui/material';
-import React, { useState } from 'react'
-import EditIcon from '@mui/icons-material/Edit';
+import { useState } from 'react'
+import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export default function EditNoteDialog({ noteData, onUpdateNote, onDeleteNote }) {
+export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNote, onDeleteNote }) {
 
-    const [open, setOpen] = useState(false)
-    const [initNote] = useState({ 'id': noteData.id, 'header': noteData.header, 'text': noteData.text });
     const [note, setNote] = useState({ 'id': noteData.id, 'header': noteData.header, 'text': noteData.text });
+    const [fontFamily, setFontFamily] = useState('Roboto');
 
-    const handleClose = () => {
-        setOpen(false);
-        setNote(initNote);
+    const theme = React.useMemo(
+        () =>
+            createTheme({
+                typography: {
+                    fontFamily
+                },
+            }),
+        [fontFamily],
+    );
+
+    const handleFontChange = (event) => {
+        setFontFamily(event.target.value);
     };
 
-    const handleOpen = () => {
-        setOpen(true);
+    const handleClose = () => {
+        onClose();
     };
 
     const handleChange = (event) => {
         setNote({ ...note, [event.target.name]: event.target.value });
-    }
+    };
 
     const handleDelete = () => {
         onDeleteNote(note.id);
-        setOpen(false);
-    }
+        handleClose();
+    };
 
     const handleSubmit = () => {
         onUpdateNote(note, note.id);
-        setOpen(false);
-    }
+        handleClose();
+    };
 
     return (
-        <>
-            <EditIcon size='large'
-                onClick={handleOpen}
-                sx={{
-                    position: 'absolute',
-                    top: 8,
-                    right: 8,
-                }} />
+        <Dialog open={isOpened} onClose={handleClose} fullScreen >
+            <IconButton size='large'
+                onClick={handleDelete}
+                sx={{ position: 'absolute', right: 16, top: 16 }}>
+                <a title='Удалить заметку'>
+                    <DeleteIcon color='error' />
+                </a>
+            </IconButton>
 
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Редактирование заметки</DialogTitle>
-                <IconButton size='large'
-                    onClick={handleDelete}
-                    sx={{
-                        position: 'absolute',
-                        right: 16,
-                        top: 16
-                    }}>
-                        <a title='Удалить заметку'>
-                    <DeleteIcon color='error'/>
-                    </a>
-                </IconButton>
+            <DialogTitle sx={{display:'flex'}}>Редактирование заметки
+            <Box sx={{ ml: 5 }}>
+                <FormControl sx={{ minWidth: 120 }}>
+                    <InputLabel htmlFor="шрифт">шрифт</InputLabel>
+                    <Select
+                        value={fontFamily}
+                        onChange={handleFontChange}
+                        label="шрифт">
+                        <MenuItem value="Roboto">Стандартный</MenuItem>
+                        <MenuItem value="Comic Sans MS">Comic Sans MS</MenuItem>
+                        <MenuItem value="Lucida Console">Lucida Console</MenuItem>
+                        <MenuItem value="Segoe UI">Segoe UI</MenuItem>
+                        <MenuItem value="New York">New York</MenuItem>
+                        <MenuItem value="Georgia">Georgia</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+            </DialogTitle>
+
+            <ThemeProvider theme={theme}>
                 <DialogContent>
                     <TextField
                         autoFocus
@@ -72,8 +93,7 @@ export default function EditNoteDialog({ noteData, onUpdateNote, onDeleteNote })
                         label="Заголовок"
                         onChange={handleChange}
                         type="text"
-                        fullWidth
-                    />
+                        fullWidth/>
                     <TextField
                         margin="dense"
                         multiline
@@ -83,14 +103,13 @@ export default function EditNoteDialog({ noteData, onUpdateNote, onDeleteNote })
                         label="Текст заметки"
                         onChange={handleChange}
                         type="text"
-                        fullWidth
-                    />
+                        fullWidth/>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Отмена</Button>
-                    <Button onClick={handleSubmit}>Сохранить</Button>
-                </DialogActions>
-            </Dialog>
-        </>
+            </ThemeProvider>
+            <DialogActions>
+                <Button onClick={handleClose}>Отмена</Button>
+                <Button onClick={handleSubmit}>Сохранить</Button>
+            </DialogActions>
+        </Dialog>
     )
 }

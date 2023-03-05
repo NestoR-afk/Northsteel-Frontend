@@ -1,8 +1,9 @@
-import { Box, 
-    Typography, 
+import { 
+    Box, 
     AppBar, 
     Toolbar, 
-    InputBase
+    InputBase,
+    Typography
  } from "@mui/material";
 import mainLogo from "../logo.png";
 import AddNoteDialog from './AddNoteDialog';

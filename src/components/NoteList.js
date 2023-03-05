@@ -6,21 +6,28 @@ import {
     CardActionArea
 } from "@mui/material";
 import EditNoteDialog from "./EditNoteDialog";
+import { useState } from 'react'
 
 function Note({ note, onUpdateNote, onDeleteNote }) {
+    const [open, setOpen] = useState(false);
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+    
     return (
         <Card sx={{ mb: 2 }}>
             <CardActionArea >
-                <CardContent>
+                <CardContent onClick={ () => setOpen(true) }>
                     <Typography sx={{ fontSize: 16 }} gutterBottom>
                         {note.header}
                     </Typography>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                        {note.text.length > 70 ? note.text.substring(0, 70) + '...' : note.text}
+                        {note.text.length > 65 ? note.text.substring(0, 65) + '...' : note.text}
                     </Typography>
-                    <EditNoteDialog noteData={note} onUpdateNote={onUpdateNote} onDeleteNote={onDeleteNote}/>
                 </CardContent>
             </CardActionArea>
+            <EditNoteDialog isOpened = { open } onClose = {handleClose} noteData = {note} onUpdateNote = {onUpdateNote} onDeleteNote={onDeleteNote}/>
         </Card>
     )
 }
@@ -34,7 +41,7 @@ export default function NoteList({ notes, onUpdateNote, onDeleteNote, filterText
             return;
         }
         rows.push(
-            <Note key={note.id} note={note} onDeleteNote={onDeleteNote} onUpdateNote={onUpdateNote}> </Note>
+            <Note key={note.id} note={note} onDeleteNote={onDeleteNote} onUpdateNote={onUpdateNote}/>
         )
     });
 

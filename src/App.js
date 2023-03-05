@@ -1,8 +1,8 @@
 import { CssBaseline,Container } from '@mui/material';
-import { useEffect } from "react"
-import { useState } from "react"
-import Header from './components/Header'
-import NoteList from './components/NoteList'
+import { useEffect } from "react";
+import { useState } from "react";
+import Header from './components/Header';
+import NoteList from './components/NoteList';
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -18,20 +18,20 @@ function App() {
       .then(response => response.json())
       .then(data => setNotes(data))
       .catch(err => console.log(err));
-  }
+  };
 
   const addNote = (note) => {
     fetch(BASE_URL + '/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(note) })
       .then(response => {
         if (response.ok) {
-          return response.json()
+          return response.json();
         } else {
           alert('Что-то пошло не так...');
         }
       })
       .then(noteData => setNotes([noteData, ...notes]))
-      .catch(err => console.log(err))
-  }
+      .catch(err => console.log(err));
+  };
 
   const updateNote = (note, id) => {
     fetch(BASE_URL + '/notes/' + id, {
@@ -47,8 +47,8 @@ function App() {
           alert('Что-то пошло не так...');
         }
       })
-      .catch(err => console.error(err))
-  }
+      .catch(err => console.error(err));
+  };
 
   const deleteNote = (id) => {
     fetch(BASE_URL + '/notes/' + id, {
@@ -58,11 +58,11 @@ function App() {
       .then(response => {
         if (!response.ok) { return; }
           setNotes(notes.filter( n => {
-            return n.id != id;
+            return n.id !== id;
           }));
         })
-      .catch(err => console.error(err))
-  }
+      .catch(err => console.error(err));
+  };
 
   return (
     <div>
