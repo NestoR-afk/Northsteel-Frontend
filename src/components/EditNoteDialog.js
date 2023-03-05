@@ -19,8 +19,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNote, onDeleteNote }) {
 
-    const [note, setNote] = useState({ 'id': noteData.id, 'header': noteData.header, 'text': noteData.text });
-    const [fontFamily, setFontFamily] = useState('Roboto');
+    const [note, setNote] = useState({ 
+        'id': noteData.id, 
+        'header': noteData.header, 
+        'text': noteData.text, 
+        'fontFamily': noteData.fontFamily
+ });
+
+    const [fontFamily, setFontFamily] = useState(noteData.fontFamily);
 
     const theme = React.useMemo(
         () =>
@@ -33,7 +39,9 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
     );
 
     const handleFontChange = (event) => {
-        setFontFamily(event.target.value);
+        const selectedFont = event.target.value;
+        setFontFamily(selectedFont);
+        setNote({...note, ['fontFamily']: selectedFont });
     };
 
     const handleClose = () => {
@@ -73,11 +81,11 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
                         onChange={handleFontChange}
                         label="шрифт">
                         <MenuItem value="Roboto">Стандартный</MenuItem>
-                        <MenuItem value="Comic Sans MS">Comic Sans MS</MenuItem>
-                        <MenuItem value="Lucida Console">Lucida Console</MenuItem>
-                        <MenuItem value="Segoe UI">Segoe UI</MenuItem>
-                        <MenuItem value="New York">New York</MenuItem>
-                        <MenuItem value="Georgia">Georgia</MenuItem>
+                        <MenuItem value="Comic Sans MS" sx={{fontFamily:"Comic Sans MS"}}>Comic Sans MS</MenuItem>
+                        <MenuItem value="Lucida Console" sx={{fontFamily:"Lucida Console"}}>Lucida Console</MenuItem>
+                        <MenuItem value="Segoe UI" sx={{fontFamily:"Segoe UI"}}>Segoe UI</MenuItem>
+                        <MenuItem value="New York" sx={{fontFamily:"New York"}}>New York</MenuItem>
+                        <MenuItem value="Georgia" sx={{fontFamily:"Georgia"}}>Georgia</MenuItem>
                     </Select>
                 </FormControl>
             </Box>

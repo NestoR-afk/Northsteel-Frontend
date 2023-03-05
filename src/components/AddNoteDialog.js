@@ -16,21 +16,23 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export default function AddNoteDialog({ onAddNote }) {
     const [open, setOpen] = useState(false);
-    const [note, setNote] = useState({ header: '', text: '' });
+    const [note, setNote] = useState({ header: '', text: '', fontFamily: 'Roboto'});
     const [fontFamily, setFontFamily] = useState('Roboto');
 
     const theme = React.useMemo(
         () =>
             createTheme({
                 typography: {
-                    fontFamily
+                    allVariants:{ fontFamily }
                 },
             }),
         [fontFamily],
     );
 
     const handleFontChange = (event) => {
-        setFontFamily(event.target.value);
+        const selectedFont = event.target.value;
+        setFontFamily(selectedFont);
+        setNote({ ...note, ['fontFamily']: selectedFont });
     };
 
     const handleClose = () => {
@@ -64,11 +66,11 @@ export default function AddNoteDialog({ onAddNote }) {
                         onChange={handleFontChange}
                         label="шрифт">
                         <MenuItem value="Roboto">Стандартный</MenuItem>
-                        <MenuItem value="Comic Sans MS">Comic Sans MS</MenuItem>
-                        <MenuItem value="Arial">Arial</MenuItem>
-                        <MenuItem value="Segoe UI">Segoe UI</MenuItem>
-                        <MenuItem value="Courier New">Courier New</MenuItem>
-                        <MenuItem value="Georgia">Georgia</MenuItem>
+                        <MenuItem value="Comic Sans MS" sx={{fontFamily:"Comic Sans MS"}}>Comic Sans MS</MenuItem>
+                        <MenuItem value="Lucida Console" sx={{fontFamily:"Lucida Console"}}>Lucida Console</MenuItem>
+                        <MenuItem value="Segoe UI" sx={{fontFamily:"Segoe UI"}}>Segoe UI</MenuItem>
+                        <MenuItem value="New York" sx={{fontFamily:"New York"}}>New York</MenuItem>
+                        <MenuItem value="Georgia" sx={{fontFamily:"Georgia"}}>Georgia</MenuItem>
                     </Select>
                 </FormControl>
             </Box>

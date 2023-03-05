@@ -23,9 +23,12 @@ export default function Header({ onAddNote, filterText, setFilterText }) {
                     Заметки
                 </Typography>
                 <InputBase sx={{
-                    backgroundColor: '#e6e6e6',
+                    backgroundColor: '#f6f6f6',
                     borderRadius: 5,
-                    paddingLeft: '1em'
+                    paddingLeft: '1em',
+                    '&:hover': {
+                        backgroundColor: '#e6e6e6'
+                    }
                     }}
                     placeholder="Поиск..."
                     value={filterText}
