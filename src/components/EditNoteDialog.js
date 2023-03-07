@@ -1,10 +1,13 @@
 import {
     Box,
+    Grid,
     Stack,
     Button,
     Dialog,
     Select,
     MenuItem,
+    ImageList,
+    ImageListItem,
     TextField,
     IconButton,
     InputLabel,
@@ -20,20 +23,22 @@ import { PhotoCamera } from '@mui/icons-material';
 
 
 export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNote, onDeleteNote }) {
+    const minFontSize = 16;
+    const maxFontSize = 40;
+    const fontSizeChangeValue = 3;
 
     const [note, setNote] = useState({
         'id': noteData.id,
         'header': noteData.header,
         'text': noteData.text,
         'fontFamily': noteData.fontFamily,
-        'fontSize': noteData.fontSize
+        'fontSize': noteData.fontSize,
+        'image': noteData.image
     });
-
-    const [fontFamily, setFontFamily] = useState(noteData.fontFamily);
-    const [fontSize, setFontSize] = useState(noteData.fontSize);
-    const minFontSize = 16;
-    const maxFontSize = 40;
-    const fontSizeChangeValue = 3;
+    const [fontFamily, setFontFamily] = useState(noteData.fontFamily || 'Roboto');
+    const [fontSize, setFontSize] = useState(noteData.fontSize || 16);
+    const [img, setImg] = useState(noteData.image || '');
+    
 
     const handleFontChange = (event) => {
         const selectedFont = event.target.value;
@@ -45,7 +50,7 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
         onClose();
     };
 
-    const handleChange = (event) => {
+    const handleChangeTextField = (event) => {
         setNote({ ...note, [event.target.name]: event.target.value });
     };
 
@@ -108,39 +113,51 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
                     </Stack>
                 </Box>
 
-                <IconButton color="primary" component="label">
+                <IconButton color="primary" component="label" sx={{ height: '40px', mt: 2, mx: 4 }}>
                     <input hidden accept="image/*" type="file" />
                     <PhotoCamera />
                 </IconButton>
             </DialogTitle>
-
             <DialogContent>
-                <TextField
-                    inputProps={{
-                        style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
-                    }}
-                    autoFocus
-                    defaultValue={note.header}
-                    margin="dense"
-                    name="header"
-                    label="Заголовок"
-                    onChange={handleChange}
-                    type="text"
-                    fullWidth
-                    multiline />
-                <TextField
-                    inputProps={{
-                        style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
-                    }}
-                    margin="dense"
-                    multiline
-                    minRows={5}
-                    defaultValue={note.text}
-                    name="text"
-                    label="Текст заметки"
-                    onChange={handleChange}
-                    type="text"
-                    fullWidth />
+                <Grid container spacing={2}>
+                    <Grid item container direction="column" sm={img == '' ? 12 : 8}>
+                        <TextField
+                            inputProps={{
+                                style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
+                            }}
+                            autoFocus
+                            defaultValue={note.header}
+                            margin="dense"
+                            name="header"
+                            label="Заголовок"
+                            onChange={handleChangeTextField}
+                            type="text"
+                            multiline
+                        />
+                        <TextField
+                            inputProps={{
+                                style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
+                            }}
+                            margin="dense"
+                            multiline
+                            minRows={5}
+                            defaultValue={note.text}
+                            name="text"
+                            label="Текст заметки"
+                            onChange={handleChangeTextField}
+                            type="text"
+                        />
+                    </Grid>
+                    <Grid item sm={4} >
+                        <ImageList sx={{ height: 'auto', overflow:'scroll', display: img == '' ? 'none' : 'inline'}} cols={1}>
+                            <ImageListItem>
+                                <img
+                                    src={"data:image/png;base64," + img}
+                                />
+                            </ImageListItem>
+                        </ImageList>
+                    </Grid>
+                </Grid>
             </DialogContent>
             <DialogActions sx={{ alignItems: 'center' }}>
                 <Button onClick={handleClose}>Отмена</Button>

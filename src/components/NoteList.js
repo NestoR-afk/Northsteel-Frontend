@@ -24,7 +24,7 @@ function Note({ note, onUpdateNote, onDeleteNote }) {
                         {note.header}
                     </Typography>
                     <Typography sx={{ fontSize: 15, fontFamily: fontFamily }} color="text.secondary">
-                        {note.text.length > 65 ? note.text.substring(0, 65) + '...' : note.text}
+                        {note.text?.length > 65 ? note.text.substring(0, 65) + '...' : note.text}
                     </Typography>
                 </CardContent>
             </CardActionArea>
@@ -35,8 +35,8 @@ function Note({ note, onUpdateNote, onDeleteNote }) {
 
 export default function NoteList({ notes, onUpdateNote, onDeleteNote, filterText }) {
     const rows = notes.map(note => {
-        if (note.header.toLowerCase().includes(filterText.toLowerCase())
-            || note.text.toLowerCase().includes(filterText.toLowerCase())) {
+        if (note.header == null || (note.header?.toLowerCase().includes(filterText.toLowerCase())
+            || note.text?.toLowerCase().includes(filterText.toLowerCase()))) {
             return <Note key={note.id} note={note} onDeleteNote={onDeleteNote} onUpdateNote={onUpdateNote} />
         }
     });
