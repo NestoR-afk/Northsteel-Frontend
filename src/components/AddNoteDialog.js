@@ -1,33 +1,30 @@
 import {
     Box,
+    Stack,
     Button,
-    Dialog, 
+    Dialog,
     Select,
     MenuItem,
-    TextField, 
+    TextField,
+    IconButton,
     InputLabel,
     FormControl,
-    DialogTitle, 
-    DialogContent, 
-    DialogActions, 
-    } from '@mui/material';
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+} from '@mui/material';
+import { PhotoCamera } from '@mui/icons-material';
+
 import React, { useState } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export default function AddNoteDialog({ onAddNote }) {
     const [open, setOpen] = useState(false);
-    const [note, setNote] = useState({ header: '', text: '', fontFamily: 'Roboto'});
+    const [note, setNote] = useState({ header: '', text: '', fontFamily: 'Roboto', fontSize: 16 });
     const [fontFamily, setFontFamily] = useState('Roboto');
-
-    const theme = React.useMemo(
-        () =>
-            createTheme({
-                typography: {
-                    allVariants:{ fontFamily }
-                },
-            }),
-        [fontFamily],
-    );
+    const [fontSize, setFontSize] = useState(16);
+    const minFontSize = 16;
+    const maxFontSize = 40;
+    const fontSizeChangeValue = 3;
 
     const handleFontChange = (event) => {
         const selectedFont = event.target.value;
@@ -53,32 +50,60 @@ export default function AddNoteDialog({ onAddNote }) {
         setNote({})
     };
 
+    const handleFontSizeIncrease = () => {
+        if (fontSize >= maxFontSize) {
+            return;
+        }
+        setFontSize(fontSize => fontSize + fontSizeChangeValue);
+        setNote({ ...note, 'fontSize': fontSize });
+    }
+
+    const handleFontSizeDecrease = () => {
+        if (fontSize <= minFontSize) {
+            return;
+        }
+        setFontSize(fontSize => fontSize - fontSizeChangeValue);
+        setNote({ ...note, 'fontSize': fontSize });
+    }
+
     return (
         <>
             <Button variant="contained" onClick={handleOpen}>Создать</Button>
             <Dialog open={open} onClose={handleClose} fullScreen>
-                <DialogTitle sx={{display:'flex'}}>Новая заметка
-                    <Box sx={{ ml: 5 }}>
-                <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel htmlFor="шрифт">шрифт</InputLabel>
-                    <Select
-                        value={fontFamily}
-                        onChange={handleFontChange}
-                        label="шрифт">
-                        <MenuItem value="Roboto">Стандартный</MenuItem>
-                        <MenuItem value="Comic Sans MS" sx={{fontFamily:"Comic Sans MS"}}>Comic Sans MS</MenuItem>
-                        <MenuItem value="Lucida Console" sx={{fontFamily:"Lucida Console"}}>Lucida Console</MenuItem>
-                        <MenuItem value="Segoe UI" sx={{fontFamily:"Segoe UI"}}>Segoe UI</MenuItem>
-                        <MenuItem value="New York" sx={{fontFamily:"New York"}}>New York</MenuItem>
-                        <MenuItem value="Georgia" sx={{fontFamily:"Georgia"}}>Georgia</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-            </DialogTitle>
+                <DialogTitle sx={{ display: 'flex' }}>Новая заметка
+                    <Box sx={{ minWidth: 120, ml: 5 }}>
+                        <FormControl>
+                            <InputLabel htmlFor="шрифт">шрифт</InputLabel>
+                            <Select
+                                value={fontFamily}
+                                onChange={handleFontChange}
+                                label="шрифт">
+                                <MenuItem value="Roboto">Стандартный</MenuItem>
+                                <MenuItem value="Times New Roman" sx={{ fontFamily: "Times New Roman" }}>Times New Roman</MenuItem>
+                                <MenuItem value="Comic Sans MS" sx={{ fontFamily: "Comic Sans MS" }}>Comic Sans MS</MenuItem>
+                                <MenuItem value="Lucida Console" sx={{ fontFamily: "Lucida Console" }}>Lucida Console</MenuItem>
+                                <MenuItem value="Segoe UI" sx={{ fontFamily: "Segoe UI" }}>Segoe UI</MenuItem>
+                                <MenuItem value="Georgia" sx={{ fontFamily: "Georgia" }}>Georgia</MenuItem>
+                            </Select>
 
-            <ThemeProvider theme={theme}>
+                        </FormControl>
+                        <Stack direction="row">
+                            <Button onClick={handleFontSizeDecrease} sx={{ width: '50%', fontSize:20 }}  >-</Button>
+                            <Button onClick={handleFontSizeIncrease} sx={{ width: '50%', fontSize:20 }} >+</Button>
+                        </Stack>
+                    </Box>
+
+                    <IconButton color="primary" component="label">
+                        <input hidden accept="image/*" type="file" />
+                        <PhotoCamera />
+                    </IconButton>
+                </DialogTitle>
+
                 <DialogContent>
                     <TextField
+                        inputProps={{
+                            style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
+                        }}
                         autoFocus
                         defaultValue={note.header}
                         margin="dense"
@@ -87,8 +112,12 @@ export default function AddNoteDialog({ onAddNote }) {
                         onChange={handleChange}
                         type="text"
                         fullWidth
+                        multiline
                     />
                     <TextField
+                        inputProps={{
+                            style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
+                        }}
                         margin="dense"
                         multiline
                         minRows={5}
@@ -100,7 +129,6 @@ export default function AddNoteDialog({ onAddNote }) {
                         fullWidth
                     />
                 </DialogContent>
-                </ThemeProvider>
                 <DialogActions>
                     <Button onClick={handleClose}>Отмена</Button>
                     <Button onClick={handleSubmit}>Сохранить</Button>

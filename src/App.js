@@ -1,7 +1,9 @@
-import { CssBaseline,Container } from '@mui/material';
-import { useEffect } from "react";
-import { useState } from "react";
-import Header from './components/Header';
+import {
+  Container,
+  CssBaseline,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import  Header from './components/Header';
 import NoteList from './components/NoteList';
 
 function App() {
@@ -35,10 +37,10 @@ function App() {
 
   const updateNote = (note, id) => {
     fetch(BASE_URL + '/notes/' + id, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(note)
-      })
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(note)
+    })
       .then(response => {
         if (response.ok) {
           fetchNotes();
@@ -52,15 +54,15 @@ function App() {
 
   const deleteNote = (id) => {
     fetch(BASE_URL + '/notes/' + id, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      })
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    })
       .then(response => {
         if (!response.ok) { return; }
-          setNotes(notes.filter( n => {
-            return n.id !== id;
-          }));
-        })
+        setNotes(notes.filter(n => {
+          return n.id !== id;
+        }));
+      })
       .catch(err => console.error(err));
   };
 
@@ -69,7 +71,7 @@ function App() {
       <CssBaseline />
       <Container maxWidth="md">
         <Header onAddNote={addNote} filterText={filterText} setFilterText={setFilterText} />
-        <NoteList  notes={notes} onUpdateNote={updateNote} onDeleteNote={deleteNote} filterText={filterText} />
+        <NoteList notes={notes} onUpdateNote={updateNote} onDeleteNote={deleteNote} filterText={filterText} />
       </Container>
     </div>
   );

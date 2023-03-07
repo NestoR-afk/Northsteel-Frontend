@@ -1,10 +1,11 @@
 import {
     Box,
+    Stack,
     Button,
     Dialog,
     Select,
-    TextField,
     MenuItem,
+    TextField,
     IconButton,
     InputLabel,
     FormControl,
@@ -15,7 +16,8 @@ import {
 import { useState } from 'react'
 import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { PhotoCamera } from '@mui/icons-material';
+
 
 export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNote, onDeleteNote }) {
 
@@ -23,25 +25,20 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
         'id': noteData.id, 
         'header': noteData.header, 
         'text': noteData.text, 
-        'fontFamily': noteData.fontFamily
+        'fontFamily': noteData.fontFamily,
+        'fontSize': noteData.fontSize
  });
 
     const [fontFamily, setFontFamily] = useState(noteData.fontFamily);
-
-    const theme = React.useMemo(
-        () =>
-            createTheme({
-                typography: {
-                    fontFamily
-                },
-            }),
-        [fontFamily],
-    );
+    const [fontSize, setFontSize] = useState(noteData.fontSize);
+    const minFontSize = 16;
+    const maxFontSize = 40;
+    const fontSizeChangeValue = 3;
 
     const handleFontChange = (event) => {
         const selectedFont = event.target.value;
         setFontFamily(selectedFont);
-        setNote({...note, ['fontFamily']: selectedFont });
+        setNote({...note, 'fontFamily': selectedFont });
     };
 
     const handleClose = () => {
@@ -62,6 +59,22 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
         handleClose();
     };
 
+    const handleFontSizeIncrease = () => {
+        if (fontSize >= maxFontSize) {
+            return;
+        }
+        setFontSize(fontSize => fontSize + fontSizeChangeValue);
+        setNote({ ...note, 'fontSize': fontSize });
+    }
+
+    const handleFontSizeDecrease = () => {
+        if (fontSize <= minFontSize) {
+            return;
+        }
+        setFontSize(fontSize => fontSize - fontSizeChangeValue);
+        setNote({ ...note, 'fontSize': fontSize });
+    }
+
     return (
         <Dialog open={isOpened} onClose={handleClose} fullScreen >
             <IconButton size='large'
@@ -73,27 +86,39 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
             </IconButton>
 
             <DialogTitle sx={{display:'flex'}}>Редактирование заметки
-            <Box sx={{ ml: 5 }}>
-                <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel htmlFor="шрифт">шрифт</InputLabel>
-                    <Select
-                        value={fontFamily}
-                        onChange={handleFontChange}
-                        label="шрифт">
-                        <MenuItem value="Roboto">Стандартный</MenuItem>
-                        <MenuItem value="Comic Sans MS" sx={{fontFamily:"Comic Sans MS"}}>Comic Sans MS</MenuItem>
-                        <MenuItem value="Lucida Console" sx={{fontFamily:"Lucida Console"}}>Lucida Console</MenuItem>
-                        <MenuItem value="Segoe UI" sx={{fontFamily:"Segoe UI"}}>Segoe UI</MenuItem>
-                        <MenuItem value="New York" sx={{fontFamily:"New York"}}>New York</MenuItem>
-                        <MenuItem value="Georgia" sx={{fontFamily:"Georgia"}}>Georgia</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-            </DialogTitle>
+            <Box sx={{ minWidth: 120, ml: 5 }}>
+                        <FormControl>
+                            <InputLabel htmlFor="шрифт">шрифт</InputLabel>
+                            <Select
+                                value={fontFamily}
+                                onChange={handleFontChange}
+                                label="шрифт">
+                                <MenuItem value="Roboto">Стандартный</MenuItem>
+                                <MenuItem value="Times New Roman" sx={{ fontFamily: "Times New Roman" }}>Times New Roman</MenuItem>
+                                <MenuItem value="Comic Sans MS" sx={{ fontFamily: "Comic Sans MS" }}>Comic Sans MS</MenuItem>
+                                <MenuItem value="Lucida Console" sx={{ fontFamily: "Lucida Console" }}>Lucida Console</MenuItem>
+                                <MenuItem value="Segoe UI" sx={{ fontFamily: "Segoe UI" }}>Segoe UI</MenuItem>
+                                <MenuItem value="Georgia" sx={{ fontFamily: "Georgia" }}>Georgia</MenuItem>
+                            </Select>
 
-            <ThemeProvider theme={theme}>
+                        </FormControl>
+                        <Stack direction="row">
+                            <Button onClick={handleFontSizeDecrease} sx={{ width: '50%', fontSize:20 }}  >-</Button>
+                            <Button onClick={handleFontSizeIncrease} sx={{ width: '50%', fontSize:20 }} >+</Button>
+                        </Stack>
+                    </Box>
+
+                    <IconButton color="primary" component="label">
+                        <input hidden accept="image/*" type="file" />
+                        <PhotoCamera />
+                    </IconButton>
+                </DialogTitle>
+
                 <DialogContent>
                     <TextField
+                        inputProps={{
+                            style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
+                        }}
                         autoFocus
                         defaultValue={note.header}
                         margin="dense"
@@ -101,8 +126,12 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
                         label="Заголовок"
                         onChange={handleChange}
                         type="text"
-                        fullWidth/>
+                        fullWidth
+                        multiline/>
                     <TextField
+                        inputProps={{
+                            style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
+                        }}
                         margin="dense"
                         multiline
                         minRows={5}
@@ -113,8 +142,7 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
                         type="text"
                         fullWidth/>
                 </DialogContent>
-            </ThemeProvider>
-            <DialogActions>
+            <DialogActions sx={{alignItems:'center'}}>
                 <Button onClick={handleClose}>Отмена</Button>
                 <Button onClick={handleSubmit}>Сохранить</Button>
             </DialogActions>
