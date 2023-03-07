@@ -88,12 +88,12 @@ export default function AddNoteDialog({ onAddNote }) {
 
                         </FormControl>
                         <Stack direction="row">
-                            <Button onClick={handleFontSizeDecrease} sx={{ width: '50%', fontSize:20 }}  >-</Button>
-                            <Button onClick={handleFontSizeIncrease} sx={{ width: '50%', fontSize:20 }} >+</Button>
+                            <Button onClick={handleFontSizeDecrease} sx={{ width: '50%', fontSize: 20 }}  >-</Button>
+                            <Button onClick={handleFontSizeIncrease} sx={{ width: '50%', fontSize: 20 }} >+</Button>
                         </Stack>
                     </Box>
 
-                    <IconButton color="primary" component="label">
+                    <IconButton color="primary" component="label" sx={{mx:4, mt:1, height:'50px'}}>
                         <input hidden accept="image/*" type="file" />
                         <PhotoCamera />
                     </IconButton>
