@@ -28,7 +28,7 @@ function App() {
         if (response.ok) {
           return response.json();
         } else {
-          alert('Что-то пошло не так...');
+          alert('Что-то пошло не так...');  
         }
       })
       .then(noteData => setNotes([noteData, ...notes]))
