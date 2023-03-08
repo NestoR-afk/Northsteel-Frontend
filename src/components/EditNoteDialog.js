@@ -19,8 +19,8 @@ import {
 import { useState } from 'react'
 import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PhotoCamera } from '@mui/icons-material';
-
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNote, onDeleteNote }) {
     const minFontSize = 16;
@@ -38,7 +38,6 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
     const [fontFamily, setFontFamily] = useState(noteData.fontFamily || 'Roboto');
     const [fontSize, setFontSize] = useState(noteData.fontSize || 16);
     const [img, setImg] = useState(noteData.image || '');
-    
 
     const handleFontChange = (event) => {
         const selectedFont = event.target.value;
@@ -80,12 +79,35 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
         setNote({ ...note, 'fontSize': fontSize });
     }
 
+    const handleImageUpload = (e) => {
+        let file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = handleReaderLoaded.bind(this);
+
+            reader.readAsBinaryString(file);
+        }
+    }
+
+    const handleReaderLoaded = (e) => {
+        let base64String = btoa(e.target.result);
+        setImg(base64String);
+        setNote({ ...note, 'image': base64String })
+    }
+
+    const handleDeleteImage = () => {
+        setImg('');
+        setNote({ ...note, 'image': '' })
+    }
+
     return (
         <Dialog open={isOpened} onClose={handleClose} fullScreen >
             <IconButton size='large'
                 onClick={handleDelete}
                 sx={{ position: 'absolute', right: 16, top: 16 }}>
-                <a title='Удалить заметку'>
+                <a title='Удалить заметку' alt='Кнопка удаления'>
                     <DeleteIcon color='error' />
                 </a>
             </IconButton>
@@ -108,19 +130,20 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
 
                     </FormControl>
                     <Stack direction="row">
-                        <Button onClick={handleFontSizeDecrease} sx={{ width: '50%', fontSize: 20 }}  >-</Button>
+                        <Button onClick={handleFontSizeDecrease} sx={{ width: '50%', fontSize: 20 }} >-</Button>
                         <Button onClick={handleFontSizeIncrease} sx={{ width: '50%', fontSize: 20 }} >+</Button>
                     </Stack>
                 </Box>
-
-                <IconButton color="primary" component="label" sx={{ height: '40px', mt: 2, mx: 4 }}>
-                    <input hidden accept="image/*" type="file" />
-                    <PhotoCamera />
-                </IconButton>
+                <form onChange={handleImageUpload}>
+                    <IconButton color="primary" component="label" sx={{ mx: 4, mt: 1, height: '50px' }}>
+                        <input hidden accept="image/*" type="file" />
+                        <PhotoCamera />
+                    </IconButton>
+                </form>
             </DialogTitle>
             <DialogContent>
                 <Grid container spacing={2}>
-                    <Grid item container direction="column" sm={img == '' ? 12 : 8}>
+                    <Grid item container direction="column" sm={img === '' ? 12 : 8}>
                         <TextField
                             inputProps={{
                                 style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
@@ -132,8 +155,7 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
                             label="Заголовок"
                             onChange={handleChangeTextField}
                             type="text"
-                            multiline
-                        />
+                            multiline/>
                         <TextField
                             inputProps={{
                                 style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
@@ -145,15 +167,21 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
                             name="text"
                             label="Текст заметки"
                             onChange={handleChangeTextField}
-                            type="text"
-                        />
+                            type="text"/>
                     </Grid>
                     <Grid item sm={4} >
-                        <ImageList sx={{ height: 'auto', overflow:'scroll', display: img == '' ? 'none' : 'inline'}} cols={1}>
+                        <ImageList sx={{ height: 'auto', overflow: 'scroll', display: img === '' ? 'none' : 'inline' }} cols={1}>
                             <ImageListItem>
-                                <img
-                                    src={"data:image/png;base64," + img}
-                                />
+                                <IconButton
+                                    onClick={handleDeleteImage}
+                                    sx={{
+                                        position: 'absolute',
+                                        right: 8,
+                                        top: 8,
+                                    }}>
+                                    <CloseIcon color="primary" />
+                                </IconButton>
+                                <img src={"data:image/png;base64," + img} />
                             </ImageListItem>
                         </ImageList>
                     </Grid>

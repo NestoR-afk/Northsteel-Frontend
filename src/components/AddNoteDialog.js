@@ -16,7 +16,9 @@ import {
     DialogContent,
     DialogActions,
 } from '@mui/material';
-import { PhotoCamera } from '@mui/icons-material';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import CloseIcon from '@mui/icons-material/Close';
+
 import React, { useState } from 'react';
 
 export default function AddNoteDialog({ onAddNote }) {
@@ -28,7 +30,7 @@ export default function AddNoteDialog({ onAddNote }) {
     const [note, setNote] = useState({ header: '', text: '', fontFamily: 'Roboto', fontSize: 16, image: null });
     const [fontFamily, setFontFamily] = useState('Roboto');
     const [fontSize, setFontSize] = useState(minFontSize);
-    const [img, setImg] = useState(null);
+    const [img, setImg] = useState('');
 
     const handleFontChange = (event) => {
         const selectedFont = event.target.value;
@@ -51,7 +53,8 @@ export default function AddNoteDialog({ onAddNote }) {
     const handleSubmit = () => {
         onAddNote(note);
         handleClose();
-        setNote({})
+        setNote({});
+        setImg('');
     };
 
     const handleFontSizeIncrease = () => {
@@ -86,6 +89,11 @@ export default function AddNoteDialog({ onAddNote }) {
         let base64String = btoa(e.target.result);
         setImg(base64String);
         setNote({ ...note, 'image': base64String })
+    }
+
+    const handleDeleteImage = () => {
+        setImg('');
+        setNote({ ...note, 'image': '' })
     }
 
     return (
@@ -124,7 +132,7 @@ export default function AddNoteDialog({ onAddNote }) {
 
                 <DialogContent>
                     <Grid container spacing={2}>
-                        <Grid item container direction="column" sm={img == null ? 12 : 8}>
+                        <Grid item container direction="column" sm={img === '' ? 12 : 8}>
                             <TextField
                                 inputProps={{
                                     style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
@@ -136,8 +144,7 @@ export default function AddNoteDialog({ onAddNote }) {
                                 label="Заголовок"
                                 onChange={handleChangeTextField}
                                 type="text"
-                                multiline
-                            />
+                                multiline/>
                             <TextField
                                 inputProps={{
                                     style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
@@ -149,15 +156,21 @@ export default function AddNoteDialog({ onAddNote }) {
                                 name="text"
                                 label="Текст заметки"
                                 onChange={handleChangeTextField}
-                                type="text"
-                            />
+                                type="text"/>
                         </Grid>
                         <Grid item sm={4}>
-                            <ImageList sx={{ height: 'auto', display: img == null ? 'none' : 'inline' }} cols={1} >
+                            <ImageList sx={{ height: 'auto', display: img === '' ? 'none' : 'inline' }} cols={1} >
                                 <ImageListItem>
-                                    <img
-                                        src={"data:image/png;base64," + img}
-                                    />
+                                    <IconButton
+                                        onClick={handleDeleteImage}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 8,
+                                            top: 8,
+                                        }}>
+                                        <CloseIcon color="primary" />
+                                    </IconButton>
+                                    <img src={"data:image/png;base64," + img} />
                                 </ImageListItem>
                             </ImageList>
                         </Grid>

@@ -1,5 +1,6 @@
 import {
     Card,
+    CardMedia,
     Container,
     Typography,
     CardContent,
@@ -18,8 +19,8 @@ function Note({ note, onUpdateNote, onDeleteNote }) {
 
     return (
         <Card sx={{ mb: 2 }}>
-            <CardActionArea >
-                <CardContent onClick={() => setOpen(true)}>
+            <CardActionArea sx={{ display: 'flex' }}>
+                <CardContent onClick={() => setOpen(true)} sx={{ flex: 1 }}>
                     <Typography sx={{ fontSize: 18, fontFamily: fontFamily }} >
                         {note.header}
                     </Typography>
@@ -27,6 +28,12 @@ function Note({ note, onUpdateNote, onDeleteNote }) {
                         {note.text?.length > 65 ? note.text.substring(0, 65) + '...' : note.text}
                     </Typography>
                 </CardContent>
+                <CardMedia sx={{
+                    height: 140,
+                    width: 100,
+                    display: note.image === null || note.image === '' ? 'none' : 'block'
+                }}
+                    image={"data:image/png;base64," + note.image}></CardMedia>
             </CardActionArea>
             <EditNoteDialog isOpened={open} onClose={handleClose} noteData={note} onUpdateNote={onUpdateNote} onDeleteNote={onDeleteNote} />
         </Card>
@@ -35,7 +42,7 @@ function Note({ note, onUpdateNote, onDeleteNote }) {
 
 export default function NoteList({ notes, onUpdateNote, onDeleteNote, filterText }) {
     const rows = notes.map(note => {
-        if (note.header == null || (note.header?.toLowerCase().includes(filterText.toLowerCase())
+        if (note.header === null || (note.header?.toLowerCase().includes(filterText.toLowerCase())
             || note.text?.toLowerCase().includes(filterText.toLowerCase()))) {
             return <Note key={note.id} note={note} onDeleteNote={onDeleteNote} onUpdateNote={onUpdateNote} />
         }

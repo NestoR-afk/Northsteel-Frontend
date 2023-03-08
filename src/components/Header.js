@@ -1,10 +1,10 @@
-import { 
-    Box, 
-    AppBar, 
-    Toolbar, 
+import {
+    Box,
+    AppBar,
+    Toolbar,
     InputBase,
     Typography
- } from "@mui/material";
+} from "@mui/material";
 import mainLogo from "../logo.png";
 import AddNoteDialog from './AddNoteDialog';
 
@@ -28,11 +28,11 @@ export default function Header({ onAddNote, filterText, setFilterText }) {
                     paddingLeft: '1em',
                     '&:hover': {
                         backgroundColor: '#e6e6e6'
-                    }
+                        }
                     }}
                     placeholder="Поиск..."
                     value={filterText}
-                    onChange={(e) => setFilterText(e.target.value)}/>
+                    onChange={(e) => setFilterText(e.target.value)} />
                 <Box sx={{ flexGrow: 1 }} />
                 <AddNoteDialog onAddNote={onAddNote} />
             </Toolbar>
