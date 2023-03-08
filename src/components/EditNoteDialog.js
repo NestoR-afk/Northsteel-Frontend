@@ -68,7 +68,7 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
         if (fontSize >= maxFontSize) {
             return;
         }
-        setFontSize(fontSize => fontSize + fontSizeChangeValue);
+        setFontSize(fontSize + fontSizeChangeValue);
         setNote({ ...note, 'fontSize': fontSize });
     }
 
@@ -76,7 +76,7 @@ export default function EditNoteDialog({ isOpened, onClose, noteData, onUpdateNo
         if (fontSize <= minFontSize) {
             return;
         }
-        setFontSize(fontSize => fontSize - fontSizeChangeValue);
+        setFontSize(fontSize - fontSizeChangeValue);
         setNote({ ...note, 'fontSize': fontSize });
     }
 

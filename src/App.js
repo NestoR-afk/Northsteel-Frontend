@@ -37,7 +37,7 @@ function App() {
 
   const updateNote = (note, id) => {
     fetch(BASE_URL + '/notes/' + id, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(note)
     })

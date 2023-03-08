@@ -1,10 +1,10 @@
 import {
     Box,
+    Grid,
     Stack,
     Button,
     Dialog,
     Select,
-    Grid,
     MenuItem,
     ImageList,
     ImageListItem,
@@ -25,17 +25,15 @@ export default function AddNoteDialog({ onAddNote }) {
     const fontSizeChangeValue = 3;
 
     const [open, setOpen] = useState(false);
-    const [note, setNote] = useState({ header: '', text: '', fontFamily: 'Roboto', fontSize: 16, image: '' });
+    const [note, setNote] = useState({ header: '', text: '', fontFamily: 'Roboto', fontSize: 16, image: null });
     const [fontFamily, setFontFamily] = useState('Roboto');
-    const [fontSize, setFontSize] = useState(16);
-    
-
-    const [img, setImg] = useState('');
+    const [fontSize, setFontSize] = useState(minFontSize);
+    const [img, setImg] = useState(null);
 
     const handleFontChange = (event) => {
         const selectedFont = event.target.value;
         setFontFamily(selectedFont);
-        setNote({ ...note, ['fontFamily']: selectedFont });
+        setNote({ ...note, 'fontFamily': selectedFont });
     };
 
     const handleClose = () => {
@@ -60,7 +58,7 @@ export default function AddNoteDialog({ onAddNote }) {
         if (fontSize >= maxFontSize) {
             return;
         }
-        setFontSize(fontSize => fontSize + fontSizeChangeValue);
+        setFontSize(fontSize + fontSizeChangeValue);
         setNote({ ...note, 'fontSize': fontSize });
     }
 
@@ -68,13 +66,11 @@ export default function AddNoteDialog({ onAddNote }) {
         if (fontSize <= minFontSize) {
             return;
         }
-        setFontSize(fontSize => fontSize - fontSizeChangeValue);
+        setFontSize(fontSize - fontSizeChangeValue);
         setNote({ ...note, 'fontSize': fontSize });
     }
 
     const handleImageUpload = (e) => {
-        console.log('changed ' + btoa(e.target.result));
-
         let file = e.target.files[0];
 
         if (file) {
@@ -128,7 +124,7 @@ export default function AddNoteDialog({ onAddNote }) {
 
                 <DialogContent>
                     <Grid container spacing={2}>
-                        <Grid item container direction="column" sm={img == '' ? 12 : 8}>
+                        <Grid item container direction="column" sm={img == null ? 12 : 8}>
                             <TextField
                                 inputProps={{
                                     style: { fontSize: fontSize, fontFamily: fontFamily, lineHeight: 1 }
@@ -157,7 +153,7 @@ export default function AddNoteDialog({ onAddNote }) {
                             />
                         </Grid>
                         <Grid item sm={4}>
-                            <ImageList sx={{ height: 'auto', display: img == '' ? 'none' : 'inline' }} cols={1} >
+                            <ImageList sx={{ height: 'auto', display: img == null ? 'none' : 'inline' }} cols={1} >
                                 <ImageListItem>
                                     <img
                                         src={"data:image/png;base64," + img}
