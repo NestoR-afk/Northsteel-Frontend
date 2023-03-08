@@ -28,7 +28,7 @@ function App() {
         if (response.ok) {
           return response.json();
         } else {
-          alert('Что-то пошло не так...');
+          alert('Что-то пошло не так...');  
         }
       })
       .then(noteData => setNotes([noteData, ...notes]))
@@ -37,7 +37,7 @@ function App() {
 
   const updateNote = (note, id) => {
     fetch(BASE_URL + '/notes/' + id, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(note)
     })
