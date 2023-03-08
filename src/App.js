@@ -3,7 +3,7 @@ import {
   CssBaseline,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import  Header from './components/Header';
+import Header from './components/Header';
 import NoteList from './components/NoteList';
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
         if (response.ok) {
           return response.json();
         } else {
-          alert('Что-то пошло не так...');  
+          alert('Что-то пошло не так...');
         }
       })
       .then(noteData => setNotes([noteData, ...notes]))
